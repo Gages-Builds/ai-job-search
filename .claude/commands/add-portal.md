@@ -1,6 +1,6 @@
 # /add-portal - Generate a Job-Portal Search Skill for Your Local Market
 
-You are helping the user build a job-portal search skill for a job board in their market. The repo ships worked examples of the pattern (four Danish portals plus the country-agnostic `linkedin-search` and `freehire-search`), and the README invites users elsewhere to build equivalents — this command turns that invitation into a guided workflow: investigate the portal, scaffold the skill from the canonical structure, and test-run a live query before registering anything.
+You are helping the user build a job-portal search skill for a job board in their market. The repo ships worked examples of the pattern (four Danish portals plus the country-agnostic `freehire-search`), and the README invites users elsewhere to build equivalents — this command turns that invitation into a guided workflow: investigate the portal, scaffold the skill from the canonical structure, and test-run a live query before registering anything.
 
 The generator is **country-agnostic**: it works for any portal in any market and language. The skills it produces are typically market-specific and live in the user's fork (per repo policy, country-specific portal skills are not merged upstream — the generator is the upstream feature, its output is yours).
 
@@ -39,7 +39,7 @@ Do reconnaissance before writing any code. Use WebFetch (or `curl` via Bash) on 
 4. **Check access requirements and terms.**
    - Fetch `robots.txt` and check whether the search/detail paths are disallowed.
    - If the portal requires login/authentication to view listings, **stop**: this pattern only works on public pages. Tell the user and suggest checking whether the portal has an official API.
-   - If robots.txt disallows the paths or the portal's terms prohibit automated access, tell the user plainly and let them decide whether to proceed for personal use. If they proceed, the generated `SKILL.md` **must** carry a prominent personal-use-only warning (copy the tone of `linkedin-search`'s "⚠️ Personal use only" section: keep volume low, no commercial or bulk use, own responsibility).
+   - If robots.txt disallows the paths or the portal's terms prohibit automated access, tell the user plainly and let them decide whether to proceed for personal use. If they proceed, the generated `SKILL.md` **must** carry a prominent personal-use-only warning (keep volume low, no commercial or bulk use, own responsibility). This fork will not add a LinkedIn portal skill under any circumstance, because that ban is not a preference and no flag reopens it.
 
 5. **Check whether the portal can be reached without a credential.** Some portals return usable content only through a third-party fetching service (a paid unlocker/proxy API). **This step never overrides Step 2.4:** if `robots.txt` or the portal's terms disallow access, that is decided there, and a paid fetching service does not change the answer. The credential path exists for portals whose `robots.txt` permits access but whose bot protection blocks ordinary fetches. Where that applies and the test fetch succeeds only through such a service, say so to the user **before scaffolding** - a portal that bills per query is a different proposition from a free one, and they may prefer to skip it. Note which service and which environment variable; the handling rules are in the portal-skill contract in Step 3.
 
@@ -49,7 +49,7 @@ Record everything you found - endpoints, parameters, field anchors, quirks - you
 
 ## Step 3: Scaffold the Skill
 
-**Canonical reference:** read `.agents/skills/linkedin-search/` before generating - it is the zero-dependency worked example of this exact structure. Copy its architecture, not its LinkedIn-specific parsing.
+**Canonical reference:** read `.agents/skills/freehire-search/` before generating - it is the zero-dependency worked example of this exact structure, built on a public JSON API rather than scraped HTML. Copy its architecture; prefer an API-backed data source over markup parsing wherever the portal offers one.
 
 Create `.agents/skills/<name>/` with:
 
@@ -80,8 +80,8 @@ These conventions are what make portal skills interchangeable for `/scrape` and 
 - **JSON output shape:** `{ "meta": { "count": ..., "page": ... }, "results": [...] }` where each result has at least `id`, `title`, `company`, `location`, `date`, `url` (missing values are `null`, never omitted).
 - **Errors:** written to **stderr** as `{ "error": "...", "code": "..." }`, exit code `1`. Never write errors to stdout.
 - **Fetching:** an honest User-Agent that names the tool (`Mozilla/5.0 (compatible; <portal>-cli/1.0)`, the convention every shipped portal CLI follows) - never a full browser impersonation; if the portal refuses that UA, escalation to browser headers goes through the robots.txt gate in `.claude/skills/job-application-assistant/09-web-research.md`, not through the CLI's default. Exponential backoff with jitter on 429/5xx (max ~6 retries), `""`/`null` on 404 rather than a crash.
-- **HTML parsing:** split the response into per-result chunks and parse each independently, so one malformed card cannot break the rest (see `parseJobCards` in `linkedin-search/cli/src/helpers.ts`).
-- **Dependencies:** default to **zero runtime dependencies** (plain `bun` + `fetch` + regex parsing) like `linkedin-search` - `bun install` should only pull dev types. Only add a parsing library if the portal's markup genuinely defeats chunked regex parsing, and say so in the README.
+- **HTML parsing:** split the response into per-result chunks and parse each independently, so one malformed card cannot break the rest (see `parseJobCards` in `jobindex-search/cli/src/helpers.ts`).
+- **Dependencies:** default to **zero runtime dependencies** (plain `bun` + `fetch` + regex parsing) like `freehire-search` - `bun install` should only pull dev types. Only add a parsing library if the portal's markup genuinely defeats chunked regex parsing, and say so in the README.
 - **Credentials:** a skill that needs an API key (Step 2.5) reads it **only** from an environment variable named `<SERVICE>_API_TOKEN`. Never hardcode it, never accept it as a CLI flag (flags leak into shell history and process listings), and never write a real token into `url-reference.md`, a README example, or a test fixture. If the variable is unset, exit `1` with the standard stderr JSON error and code `MISSING_CREDENTIALS`, naming the variable to set - never fall through to an unauthenticated request that fails confusingly. The repo `.gitignore` covers `.env`; do not commit one.
 
 ### File specifics
@@ -155,6 +155,6 @@ Present a summary:
 - The generator is country-agnostic; its output is market-specific and stays in the user's fork. This matches the repo policy that upstream stays a universal template.
 - Investigation before scaffolding: the command never generates parsers from guesses - Step 2 fetches real responses first, and Step 4 verifies against live data before anything is registered.
 - The portal-skill contract keeps every generated skill interchangeable with the shipped ones: same commands, same flags, same output shape, same error convention.
-- Zero runtime dependencies by default, matching `linkedin-search` - a portal skill should run on a fresh clone with nothing but `bun`.
+- Zero runtime dependencies by default, matching `freehire-search` - a portal skill should run on a fresh clone with nothing but `bun`.
 - Access rules are surfaced, not silently bypassed: auth-walled portals are declined, robots.txt/ToS restrictions are reported to the user, and restricted portals get a prominent personal-use-only warning in the generated skill.
 - Credentials live in the environment, never in the repo: a generated skill reads its token from an environment variable, fails loudly when it is unset, and never commits it. Per-call cost is disclosed before the skill is generated, not discovered afterwards.

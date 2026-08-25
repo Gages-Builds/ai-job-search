@@ -2,7 +2,7 @@
 name: scrape
 description: >
   Finds new job postings matching your profile via installed portal-search CLIs
-  (LinkedIn, local job boards, and any skills added with /add-portal). Deduplicates
+  (local job boards, aggregators, and any skills added with /add-portal). Deduplicates
   across runs. Triggers on: job scrape, find jobs, search jobs, new jobs, job search,
   scrape jobs, /scrape
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(bun --version), Bash(bun run .agents/skills/*/cli/src/cli.ts *), WebFetch, WebSearch, Agent, AskUserQuestion
@@ -157,29 +157,33 @@ The `source` field records which mechanism produced the entry: `cli` for Step 1b
 
 2. Only present jobs NOT already in the seen list or tracker.
 
-### Step 4.5: Generate Referral Contact Links (High & Medium Fit Only)
+### Step 4.5: Generate Referral Contact Leads (High & Medium Fit Only)
 
 For every job from this run with `fit` of **high** or **medium** (skip low-fit jobs),
-build two LinkedIn people-search URLs so the user can find a recruiter or team member to
-reach out to for a referral or a warm intro. This is deliberately a link-generation step,
-not an automated lookup: no scraping, no third-party API, zero runtime dependencies or
-credentials required.
+generate two referral-contact leads from pages the employer itself publishes. This is
+deliberately a link-generation step, not an automated lookup: no people-directory
+scraping, no third-party API, zero runtime dependencies or credentials required.
 
 **A. Recruiters / Talent Acquisition (the referral path)**
 ```
-https://www.linkedin.com/search/results/people/?keywords=<url-encoded "<Company Name> recruiter">&origin=GLOBAL_SEARCH_HEADER
+<company-website>/careers  and  <company-website>/about
 ```
+Link to the employer's own careers page and its about/team page - the places a company
+publishes its hiring contacts and team structure.
 
 **B. Role/team peers (informational-outreach / warm-intro path)**
 ```
-https://www.linkedin.com/search/results/people/?keywords=<url-encoded "<Company Name> <role keyword>">&origin=GLOBAL_SEARCH_HEADER
+Public conference / publication listings the company publishes about its own people
 ```
-Use a short keyword drawn from the posting's title for `<role keyword>` - e.g. a posting
-titled "AI Program Manager" becomes `"<Company Name> AI Program Manager"`.
+Use the company's own site (team, newsroom, engineering blog) plus any conference,
+journal, or community listings the company itself publishes naming its staff - e.g. a
+talk page for "AI Program Manager at <Company Name>" published by the company or by
+the conference it sponsored.
 
-Both links are for the user to open and browse themselves - never fetch or scrape the
-LinkedIn people-search result pages programmatically. Never fabricate contacts or claim a
-specific person was found; these are search links, not results.
+Both leads point at pages the employer publishes about itself - never fetch or scrape
+people-search directories programmatically. Never fabricate contacts or claim a
+specific person was found; these are starting points for the user's own browsing,
+not results.
 
 ### Step 4.75: Portal Health Check
 
@@ -238,9 +242,10 @@ For each high-match job, add 2-3 bullet points:
 
 ### Contacts
 For each high/medium-fit job from Step 4.5, add a short contacts block with the two
-LinkedIn search links:
-- Recruiters/TA search link, for the referral path
-- Role/team-peer search link, for the warm-intro / informational-outreach path
+referral leads:
+- Employer careers/about link, for the referral path
+- Company-published conference/publication listing link, for the warm-intro /
+  informational-outreach path
 ```
 
 After presenting, ask:
@@ -264,6 +269,6 @@ If the user decides to apply to any job, the tracker row is written by **job-app
 4. **Only open positions.** Skip postings with expired deadlines or those marked as closed.
 5. **Be efficient with detail fetches.** Don't run `detail` or WebFetch on every search hit — pre-filter by title/snippet, then fetch only promising matches.
 6. **Parallel searches.** Run portal CLI searches in parallel; use WebSearch only for gaps the CLIs don't cover.
-7. **No automated people lookups.** Referral contacts (Step 4.5) are LinkedIn search links only - never fetch or scrape LinkedIn people-search result pages programmatically.
+7. **No automated people lookups.** Referral leads (Step 4.5) come only from pages the employer publishes about itself - never fetch or scrape people-search directories or social-network result pages programmatically.
 8. **Health checks are bounded and honest.** Step 4.75 spends at most one probe, one retry, and (in `health` mode) one detail fetch per portal - a diagnosis, not a crawl. A rate-limit is never evidence of breakage. Health verdicts come only from observed CLI output; a portal that could not be tested is reported as inconclusive, never guessed. The `enabled` toggle is the only thing the health check may edit, and only with confirmation.
 9. **Flag distribution patterns, never accuse.** The mass-posting signal (Step 2.5) describes how a listing is being distributed, not a claim that the employer is a scam. Never name a company as fraudulent or untrustworthy - present the observation and let the user decide.

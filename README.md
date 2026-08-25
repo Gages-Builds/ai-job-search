@@ -92,7 +92,7 @@ cd ai-job-search
 PowerShell:
 
 ```powershell
-$tools = @("jobbank-search", "jobdanmark-search", "jobindex-search", "jobnet-search", "linkedin-search", "freehire-search")
+$tools = @("jobbank-search", "jobdanmark-search", "jobindex-search", "jobnet-search", "freehire-search")
 foreach ($tool in $tools) {
   Push-Location ".agents/skills/$tool/cli"
   bun install
@@ -103,12 +103,12 @@ foreach ($tool in $tools) {
 Bash / zsh / Git Bash:
 
 ```bash
-for tool in jobbank-search jobdanmark-search jobindex-search jobnet-search linkedin-search freehire-search; do
+for tool in jobbank-search jobdanmark-search jobindex-search jobnet-search freehire-search; do
   (cd .agents/skills/$tool/cli && bun install)
 done
 ```
 
-For `linkedin-search` and `freehire-search` the install is optional: both have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types.
+For `freehire-search` the install is optional: it has zero runtime dependencies and runs with plain `bun`; `bun install` only pulls TypeScript dev types.
 
 ### 3. Set up your profile
 
@@ -198,7 +198,6 @@ ai-job-search/
 │   ├── jobdanmark-search/             # Jobdanmark.dk (Denmark)
 │   ├── jobindex-search/               # Jobindex.dk (Denmark)
 │   ├── jobnet-search/                 # Jobnet.dk (Denmark, government portal)
-│   ├── linkedin-search/               # LinkedIn public job listings (country-agnostic)
 │   └── freehire-search/               # freehire.me tech job aggregator (multi-market, REST API)
 ├── cv/
 │   └── main_example.tex               # moderncv LaTeX template
@@ -308,9 +307,8 @@ Give it your local job board's URL. The command investigates the portal (search-
 
 Maintaining a fork adapted to your market or language? Add it to the [Community forks & adaptations](https://github.com/MadsLorentzen/ai-job-search/discussions/78) thread so others can find it.
 
-For **country-agnostic** starting points outside Denmark, the repo ships two portal skills alongside the Danish demos:
+For **country-agnostic** starting points outside Denmark, the repo ships a portal skill alongside the Danish demos:
 
-- **`linkedin-search`** — built on LinkedIn's public, unauthenticated `jobs-guest` endpoints. Field-agnostic, **zero runtime dependencies** (runs with just `bun`), and takes the search location as an explicit flag, so it works for any market out of the box (`-l "Berlin, Germany"`, `-l "Mumbai, Maharashtra, India"`, `-l "Remote"`, …). Intended for **personal use only** — automated access is against LinkedIn's Terms of Service, so keep volume low. See `.agents/skills/linkedin-search/SKILL.md`.
 - **`freehire-search`** — queries the [freehire.me](https://freehire.me) aggregator's public REST API (JSON, no API key). Tech-focused (software, data, engineering, DevOps, remote), multi-market via facet flags (`--region`, `--country`, `--remote`), and **zero runtime dependencies**. Unlike the HTML-scraping Danish portals, results come back structured (skills, seniority, category). The backend is MIT-licensed and [self-hostable](https://github.com/strelov1/freehire) — point `FREEHIRE_API_URL` at your own instance if you prefer. See `.agents/skills/freehire-search/SKILL.md`.
 
 ### Extending the framework: portals, templates, criteria - and borrowing from other forks

@@ -15,7 +15,7 @@ Thanks for considering a contribution! This repo has a deliberate, narrow philos
 
 ## What gets declined
 
-- **Market- or country-specific skills and content.** One country's portal opens the door to every country's portal; there is no principled stopping point. Precedent: [#31] (India), [#39] (France, despite an honest and excellent PR), [#67] (China). The in-tree portal skills are either country-agnostic (`linkedin-search`) or the maintainer's own demonstration instance (the Danish portals).
+- **Market- or country-specific skills and content.** One country's portal opens the door to every country's portal; there is no principled stopping point. Precedent: [#31] (India), [#39] (France, despite an honest and excellent PR), [#67] (China). The in-tree portal skills are either country-agnostic (`freehire-search`) or the maintainer's own demonstration instance (the Danish portals).
 - **Personal profile data.** The template ships placeholders; your populated profile lives in your fork. CI enforces this (`placeholder-integrity`). Precedent: [#17], [#72].
 - **Alternative-harness ports and duplicate workflow sources.** The markdown specs ARE the implementation; a second copy (another agent CLI, an orchestration layer, a wrapper command) drifts from the first the moment either changes. Precedent: [#44], [#49], [#66].
 - **Speculative infrastructure.** Complexity must be argued from a problem that exists, not one that might. Precedent: [#63].
@@ -66,7 +66,7 @@ This is a decision, not a dogma: if cross-runtime standards mature to the point 
 
 ## Practical notes
 
-- **Portal-skill contract**: `search`/`detail` commands, `--format json|table|plain`, stderr JSON errors with exit 1, backoff on 429/5xx, zero runtime dependencies by default. See `/add-portal`'s spec and `linkedin-search` as the reference implementation.
+- **Portal-skill contract**: `search`/`detail` commands, `--format json|table|plain`, stderr JSON errors with exit 1, backoff on 429/5xx, zero runtime dependencies by default. See `/add-portal`'s spec and `freehire-search` as the reference implementation.
 - **Personal-use boundaries**: portal skills that touch ToS-restricted sources carry a prominent personal-use-only warning, and CI deliberately makes no live portal requests. Don't "fix" that.
 - **LaTeX changes**: both templates must compile (`lualatex` for the CV, `xelatex` for the cover letter) and hold their exact page counts. CI smoke-checks this.
 

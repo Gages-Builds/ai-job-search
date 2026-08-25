@@ -104,6 +104,12 @@ upskill/*.md
 # **/-prefixed job_scraper/upskill rules above.
 company_research/*.json
 
+# The operator's real search-law criteria (cities and salary floors). The
+# example ships as kairi/search-law.example.json; a filled-in copy must only
+# ever live outside the repo (~/.local/share/kairi/search-law.json), because a
+# public repository is the wrong place for someone's job-search criteria.
+kairi/search-law.json
+
 # Agent skills: track the source, ignore only deps and logs.
 # (A blanket `.agents/` ignore silently drops the job-search CLI skills from the repo.)
 .agents/**/node_modules/

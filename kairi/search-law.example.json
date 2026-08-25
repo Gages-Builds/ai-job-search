@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "ruled": "2000-01-01",
+  "currency": "USD",
+  "posture": "Free text describing how borderline roles should be treated; the gate records it in the artifact but does not parse it.",
+  "groups": [
+    {
+      "name": "Group A (example)",
+      "cities": [
+        "EXAMPLE-CITY-1",
+        "EXAMPLE-CITY-2",
+        "EXAMPLE-CITY-3",
+        "EXAMPLE-CITY-4",
+        "EXAMPLE-CITY-5"
+      ],
+      "soft_floor": 100000
+    },
+    {
+      "name": "Group B (example)",
+      "cities": [
+        "EXAMPLE-CITY-6",
+        "EXAMPLE-CITY-7",
+        "EXAMPLE-CITY-8",
+        "EXAMPLE-CITY-9",
+        "EXAMPLE-CITY-10",
+        "EXAMPLE-CITY-11",
+        "EXAMPLE-CITY-12",
+        "EXAMPLE-CITY-13"
+      ],
+      "soft_floor": 120000
+    }
+  ],
+  "remote": {
+    "soft_floor": 80000,
+    "precedence_over_groups": true
+  },
+  "absolute_floor": 50000
+}

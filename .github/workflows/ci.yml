@@ -8,8 +8,8 @@
 # asserted everywhere.
 #
 # Deliberately NOT here: live smoke tests of the job-portal CLIs. They hit
-# real portals (network-flaky, and the linkedin-search skill is personal-use
-# only per its own ToS warning - CI-automated requests would violate that).
+# real portals (network-flaky, and some portals' terms restrict automated
+# access - CI-automated requests could violate those terms).
 # CI runs typechecks and the checked-in fixture/mock test suites only; live
 # portal testing stays a local, on-demand step.
 #
