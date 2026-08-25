@@ -89,6 +89,11 @@ REQUIRED_IGNORE_RULES = [
     # from commands, not a skill, so a plain rooted rule is correct here -
     # unlike the **/-prefixed job_scraper/upskill rules above.
     "company_research/*.json",
+    # The operator's real search-law criteria (cities and salary floors). The
+    # committed example is kairi/search-law.example.json; the non-example name
+    # must stay untracked because a public repo is the wrong place for
+    # personal job-search criteria (see kairi/README.md).
+    "kairi/search-law.json",
 ]
 
 # Negation (re-include) rules the template legitimately ships. .gitignore is

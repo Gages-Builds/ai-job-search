@@ -51,6 +51,32 @@ describe("toResult — reshape into the portal-skill contract", () => {
   });
 });
 
+describe("toResult — structured salary passthrough", () => {
+  // The gate downstream reads numbers, not the display string: these cases pin
+  // that the structured fields travel verbatim and that absence stays null
+  // (unknown), never zero or an invented default.
+  test("both bounds present carry through untouched", () => {
+    const r = toResult(job({ enrichment: { salary_min: 90000, salary_max: 120000, salary_currency: "EUR" } }));
+    expect(r.salary_min).toBe(90000);
+    expect(r.salary_max).toBe(120000);
+    expect(r.salary_currency).toBe("EUR");
+  });
+
+  test("only one bound present carries that bound; the other is null", () => {
+    const r = toResult(job({ enrichment: { salary_max: 110000 } }));
+    expect(r.salary_min).toBeNull();
+    expect(r.salary_max).toBe(110000);
+    expect(r.salary_currency).toBeNull();
+  });
+
+  test("neither bound present is null across the board - unstated, not zero", () => {
+    const r = toResult(job({ enrichment: {} }));
+    expect(r.salary_min).toBeNull();
+    expect(r.salary_max).toBeNull();
+    expect(r.salary_currency).toBeNull();
+  });
+});
+
 describe("toDetail — adds cleaned description + enrichment", () => {
   test("strips HTML and decodes entities in the description", () => {
     const d = toDetail(job());

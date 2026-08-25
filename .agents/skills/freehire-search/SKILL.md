@@ -163,7 +163,12 @@ bun run .agents/skills/freehire-search/cli/src/cli.ts detail golang-zensar-2bxu6
 
 Search JSON is `{ "meta": { "count", "page", "total" }, "results": [...] }`; each
 result carries at least `id` (the freehire slug), `title`, `company`, `location`,
-`date`, `url`, and `description` (missing values are `null`). `table` and `plain`
+`date`, `url`, `work_mode`, `regions`, `countries`, `cities`, and `description`
+(missing values are `null`). Each result also carries the structured salary
+fields `salary_min`, `salary_max`, and `salary_currency`, verbatim from the
+source's enrichment — **a `null` salary field means the posting did not state a
+value, never that it pays nothing**; read these numbers directly rather than
+parsing them out of any display string. `table` and `plain`
 omit the description — it would swamp a scannable list. All errors are written to
 **stderr** as `{ "error": "...", "code": "..." }` and the process exits with code `1`.
 

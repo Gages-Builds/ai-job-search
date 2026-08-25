@@ -118,6 +118,11 @@ export interface FreehireJob {
  * `description` is the posting's full text in the format the search asked the API
  * for — the agent search endpoint hydrates it server-side, so it arrives already
  * rendered and is passed through verbatim rather than run through `cleanHtml`.
+ *
+ * The structured salary fields (`salary_min` / `salary_max` / `salary_currency`)
+ * are carried exactly as the source stated them, so downstream consumers can read
+ * numbers instead of parsing the human-readable display string. `null` means the
+ * posting did not state a value — never that the value is zero.
  */
 export interface JobResult {
   id: string
@@ -130,8 +135,12 @@ export interface JobResult {
   work_mode: string | null
   regions: string[]
   countries: string[]
+  cities: string[]
   skills: string[]
   description: string | null
+  salary_min: number | null
+  salary_max: number | null
+  salary_currency: string | null
 }
 
 /** A job detail: the search result plus the cleaned description and enrichment. */
@@ -146,6 +155,10 @@ export interface JobDetailResult extends JobResult {
 
 /** Reshape a freehire job into the contract search-result fields. */
 export function toResult(j: FreehireJob): JobResult {
+  // `enrichment` is typed as always present (an unenriched job serializes it
+  // as `{}`), but the wire is untrusted: guard anyway so a missing object
+  // degrades to nulls rather than throwing.
+  const e = j.enrichment || {}
   return {
     id: j.public_slug,
     title: j.title || "(untitled)",
@@ -157,8 +170,14 @@ export function toResult(j: FreehireJob): JobResult {
     work_mode: j.work_mode || null,
     regions: j.regions,
     countries: j.countries,
+    cities: j.cities,
     skills: j.skills,
     description: j.description || null,
+    // Structured salary, verbatim from the enrichment — never parsed back out
+    // of the display string, never defaulted. Absent means unknown.
+    salary_min: e.salary_min ?? null,
+    salary_max: e.salary_max ?? null,
+    salary_currency: e.salary_currency ?? null,
   }
 }
 
@@ -167,7 +186,6 @@ export function toDetail(j: FreehireJob): JobDetailResult {
   const e = j.enrichment
   return {
     ...toResult(j),
-    cities: j.cities,
     seniority: e.seniority || null,
     category: e.category || null,
     employment_type: e.employment_type || null,
