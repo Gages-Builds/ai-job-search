@@ -1,8 +1,8 @@
 // Data source: the freehire.me public REST API (JSON, `{data, meta}` envelope).
-// Reads are unauthenticated — no API key, the same bar as linkedin-search — and
-// unlike the HTML-scraping portals there is no markup to parse: we fetch JSON and
-// reshape it into the portal-skill contract's result fields. The base URL is
-// swappable via FREEHIRE_API_URL for self-hosting.
+// Reads are unauthenticated — no API key — and unlike the HTML-scraping portals
+// there is no markup to parse: we fetch JSON and reshape it into the
+// portal-skill contract's result fields. The base URL is swappable via
+// FREEHIRE_API_URL for self-hosting.
 
 export const DEFAULT_BASE_URL = "https://freehire.me"
 

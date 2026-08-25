@@ -88,7 +88,7 @@ Does the role and company culture match the behavioral profile?
 | 40-59 | Some friction areas |
 | 0-39 | Significant culture mismatch |
 
-**Red flags to research:** Department disorganization, work dominated by maintenance over development, poor chemistry with leadership, culture mismatches. Check reviews, media coverage, LinkedIn connections, and network contacts for insider perspective.
+**Red flags to research:** Department disorganization, work dominated by maintenance over development, poor chemistry with leadership, culture mismatches. Check reviews, media coverage, the company's own careers/about/team pages and public filings, and network contacts for insider perspective.
 
 ### 4. Location & Logistics (Pass/Fail + Notes)
 - Within commute range: PASS
@@ -174,7 +174,7 @@ Present the evaluation as:
 ### Company Research Checklist
 - [ ] Checked company website (mission, values, recent news)
 - [ ] Checked review sites (Glassdoor, Jobindex, etc.)
-- [ ] Checked LinkedIn for team size, recent hires, connections
+- [ ] Checked the company's own careers/about/team page and its public filings or newsroom
 - [ ] Checked media for restructuring, growth, or workplace issues
 - [ ] Identified network contacts who may know the team/manager
 ```
@@ -211,7 +211,7 @@ since both consumers read this section rather than hardcoding a number of their 
   "sources": {
     "website": {"url": "...", "notes": "mission, values, recent news"},
     "reviews": {"url": "...", "notes": "..."},
-    "linkedin": {"url": "...", "notes": "team size, recent hires"},
+    "company_pages": {"url": "...", "notes": "careers/about/team page, filings or newsroom"},
     "media": {"url": "...", "notes": "..."}
   },
   "network_contacts_note": "..."

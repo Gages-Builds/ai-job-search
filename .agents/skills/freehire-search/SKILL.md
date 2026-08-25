@@ -24,10 +24,9 @@ and **zero runtime dependencies** — it runs with just `bun`. The market is cho
 per query via facet flags (`--region`, `--country`), so the same skill works for a
 forker in any market out of the box.
 
-> This is a country-agnostic worked example of the repo's job-portal-skill pattern,
-> like `linkedin-search`. Unlike the HTML-scraping portals, it queries freehire's
-> public JSON API, so results are structured (skills, seniority, region facets)
-> rather than parsed from markup.
+> This is a country-agnostic worked example of the repo's job-portal-skill pattern.
+> Unlike the HTML-scraping portals, it queries freehire's public JSON API, so results
+> are structured (skills, seniority, region facets) rather than parsed from markup.
 
 ## ⚠️ Scope: tech-focused
 
@@ -41,7 +40,7 @@ coverage exists but is still maturing; don't rely on this skill for general
 ## ℹ️ Hosted-service dependency (best-effort, no SLA)
 
 This skill depends on a third-party hosted service, freehire.me. Reads are
-**public and unauthenticated** — the same zero-signup bar as `linkedin-search`.
+**public and unauthenticated** — no account or sign-up of any kind.
 
 **freehire.me is a personal project but actively maintained; it runs on a
 best-effort basis (no formal SLA).** If the API is unreachable, the CLI fails
@@ -111,7 +110,7 @@ Facet filters (values come from freehire's controlled vocabularies; comma-separa
 - `--remote <mode>` — `remote` | `hybrid` | `onsite` (`work_mode` facet)
 - `--facet <key=value>` — any other facet param (repeatable), e.g. `--facet salary_min=100000`
 
-> **Location is a facet, not free text.** Unlike `linkedin-search`'s `--location`,
+> **Location is a facet, not free text.** Instead of free-text location keywords,
 > freehire filters geography through the structured `--region`/`--country`/`--city`
 > facets. Discover the live values for a market at
 > [`/api/v1/jobs/facets`](https://freehire.me/api/v1/jobs/facets) (append `?q=<role>`

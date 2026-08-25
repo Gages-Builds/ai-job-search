@@ -20,7 +20,7 @@ When the user provides a job posting (URL or text), follow this workflow:
 - Fetch the job posting content (use WebFetch for URLs). **A 403 is not a dead end** - follow the escalation order in `09-web-research.md` before concluding a page is unavailable, and prefer the employer's own careers posting over an aggregator listing
 - Keep the **full posting text verbatim** for Step 3b to archive - never a summary
 - Analyze the posting for required competencies, keywords, and priorities
-- Research the company (website, LinkedIn, mission, recent news), per `09-web-research.md`
+- Research the company (website, careers/about/team pages, mission, recent news), per `09-web-research.md`
 - Score the posting against the candidate's profile using the framework in `04-job-evaluation.md`
 - Present the evaluation table and verdict
 - Suggest whether the candidate should call the employer before applying (see `04-job-evaluation.md` for guidance)
