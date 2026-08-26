@@ -40,7 +40,7 @@ jobs:
     # No-op on the upstream template itself. Pinned by
     # tests/test_upstream_triage.py so a template clone never runs it by surprise.
     if: github.repository != 'MadsLorentzen/ai-job-search'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER_LABELS && fromJSON(vars.CI_RUNNER_LABELS) || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
